@@ -1,0 +1,120 @@
+#####################
+# Build results
+#####################
+bin/
+obj/
+[Bb]uild/
+[Ll]og/
+[Ll]ogs/
+[Dd]ebug/
+[Dd]ebugPublic/
+[Rr]elease/
+[Rr]eleases/
+x64/
+x86/
+[Ww][Ii][Nn]32/
+[Aa][Rr][Mm]/
+[Aa][Rr][Mm]64/
+bld/
+
+#####################
+# Visual Studio
+#####################
+.vs/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+#####################
+# VS Code
+#####################
+.vscode/
+
+#####################
+# Rider / JetBrains
+#####################
+.idea/
+*.sln.iml
+
+#####################
+# .NET Core / NuGet
+#####################
+project.lock.json
+project.fragment.lock.json
+artifacts/
+*.nupkg
+*.snupkg
+.nuget/
+packages/
+*.nuspec
+
+#####################
+# Entity Framework
+#####################
+Migrations/
+
+#####################
+# ASP.NET / Web
+#####################
+wwwroot/
+*.db
+*.db-shm
+*.db-wal
+ScaffoldingReadMe.txt
+
+#####################
+# Logs / Temp
+#####################
+*.log
+*.tmp
+*.bak
+*.orig
+*.rej
+*.sdf
+*.cache
+*.pdb
+
+#####################
+# Secrets / Config
+#####################
+appsettings.Development.json
+appsettings.Local.json
+secrets.json
+
+#####################
+# ReSharper
+#####################
+_ReSharper*/
+*.[Rr]e[Ss]harper
+
+#####################
+# Tests / Coverage
+#####################
+TestResults/
+*.TestResults.xml
+coverage/
+coverage.*.xml
+*.coverage
+*.coveragexml
+[Tt]est[Rr]esult*/
+[Bb]uild[Ll]og.*
+*.VisualState.xml
+TestResult.xml
+nunit-*.xml
+
+#####################
+# MSBuild logs
+#####################
+*.binlog
+
+#####################
+# Otros / SO
+#####################
+.DS_Store
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+~$*
+*~
