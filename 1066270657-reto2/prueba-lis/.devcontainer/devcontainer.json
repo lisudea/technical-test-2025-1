@@ -1,0 +1,17 @@
+{
+  "name": "Spring Boot + Gradle Dev",
+  // Usa una imagen con JDK 17
+  "image": "mcr.microsoft.com/devcontainers/java:0-17",
+  "features": {},
+  "extensions": [
+    "vscjava.vscode-java-pack",
+    "vscjava.vscode-gradle",
+    "pivotal.vscode-boot-dev-pack",
+    "ms-azuretools.vscode-docker"
+  ],
+  // Expone el puerto de tu aplicación Spring Boot
+  "forwardPorts": [8080],
+  "postCreateCommand": "./gradlew build",
+  "remoteUser": "vscode",
+  "workspaceFolder": "/workspace"
+}

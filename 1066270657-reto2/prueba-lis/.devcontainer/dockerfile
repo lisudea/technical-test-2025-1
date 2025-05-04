@@ -1,0 +1,11 @@
+# Use the official Dev Container image with Java 17 and common tools
+FROM mcr.microsoft.com/devcontainers/java:0-17
+
+# [Optional] Install additional packages if needed
+# RUN apt-get update && apt-get install -y <package-name>
+
+# Set working directory
+WORKDIR /workspace
+
+# By default, Codespaces runs as 'vscode' user and mounts the workspace here
+# The devcontainer.json will handle building and running your app
