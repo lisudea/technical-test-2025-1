@@ -1,138 +1,112 @@
 # technical-test-2025-1
-# Como conectar una app en Go con un servidor LDAP para verificar usuarios
+# Conectando una aplicación en Go a un servidor LDAP
 
-## Introduccion
+## Introducción
 
-En el entorno de TI actual, uno de los retos mas comunes es la integracion con servicios ya existentes, como lo son los directorios LDAP. En mi caso, me pidieron investigar como se podria desarrollar una aplicacion en Go que se conecte a un servidor LDAP y verifique si un estudiante esta registrado en el sistema del laboratorio de sistemas (LIS).
+En entornos académicos y empresariales, el uso de sistemas centralizados para la gestión de usuarios es una práctica estándar. Uno de los protocolos más comunes para acceder a este tipo de servicios es LDAP (Lightweight Directory Access Protocol). Este protocolo permite autenticar, buscar y gestionar usuarios dentro de un directorio. En este contexto, se planteó la necesidad de desarrollar una aplicación en Go que pueda verificar si un estudiante está registrado en el sistema del Laboratorio Integrado de Sistemas (LIS), utilizando un servidor LDAP. Después de revisar documentación, ejemplos prácticos y experiencias compartidas por otros desarrolladores, pude construir un enfoque sólido para lograrlo.
 
-Este informe no incluye codigo completamente funcional (aunque si algunos ejemplos), sino que mas bien esta enfocado en explicar el proceso que habria que seguir, que librerias se pueden usar y cuales son las recomendaciones de seguridad que hay que tener en cuenta. La idea es que esta guia pueda servirle a cualquier persona que, como yo, este aprendiendo y quiera entender como funciona todo esto.
+## Conexión al servidor LDAP desde Go
 
-## Que es LDAP y para que sirve?
-
-LDAP (Lightweight Directory Access Protocol) es un protocolo que se usa para consultar y modificar servicios de directorio. En palabras simples, se trata de un sistema jerarquico donde se guarda informacion, principalmente sobre usuarios, grupos, dispositivos, etc. Se usa mucho en empresas, universidades y organizaciones para autenticar personas.
-
-Por ejemplo, cuando uno entra a un sistema con su usuario institucional, normalmente en el backend hay un LDAP verificando si ese usuario existe, que permisos tiene, etc.
-
-## Paso 1: Usar Go para conectarse a un servidor LDAP
-
-Go es un lenguaje muy bueno para este tipo de tareas por su rapidez y facilidad de manejo de redes. Lo primero que hice fue buscar librerias que permitieran conectarse a un servidor LDAP, y encontre varias, pero la que mas se usa (y con mejor documentacion) es:
+Para conectar una aplicación en Go a un servidor LDAP, se utiliza comúnmente el paquete `github.com/nmcclain/ldap`. Este paquete permite establecer la conexión, autenticar usuarios y realizar búsquedas dentro del directorio LDAP. La instalación del paquete se realiza mediante:
 
 ```bash
 go get github.com/nmcclain/ldap
 ```
 
-Esta libreria permite hacer cosas como conectarse al servidor, autenticarse, buscar usuarios y mas.
+Una vez instalado, se puede establecer una conexión al servidor, ya sea en modo estándar o mediante una conexión segura con TLS. Aunque ambas son posibles, la segunda es la recomendada para producción.
 
-## Paso 2: Conectarse al servidor LDAP
-
-La conexion se puede hacer de dos formas: usando LDAP normal (sin cifrar) o usando LDAPS, que es la version segura (con SSL/TLS). Obviamente, lo ideal es usar LDAPS para proteger la informacion que se intercambia.
-
-### Conexion basica:
+### Conexión estándar:
 
 ```go
-l, err := ldap.Dial("tcp", "ldap://localhost:389")
+l, err := ldap.Dial("tcp", "localhost:389")
 if err != nil {
-	log.Fatal("No se pudo conectar al servidor:", err)
+	log.Fatal(err)
 }
 defer l.Close()
 ```
 
-Si estas usando LDAPS, seria algo como:
+### Conexión segura con TLS:
 
 ```go
-l, err := ldap.Dial("tcp", "ldaps://localhost:636")
-```
-
-## Paso 3: Autenticarse (Bind)
-
-Despues de conectarte, toca autenticarse. Esto se hace con una funcion llamada `Bind`, donde uno le pasa un usuario (normalmente el admin LDAP) y una contrasena. El usuario se identifica con algo llamado DN (Distinguished Name), que es como la "ruta" unica dentro del directorio LDAP.
-
-```go
-err = l.Bind("cn=admin,dc=example,dc=com", "contrasena")
+l, err := ldap.DialTLS("tcp", "ldap.miuniversidad.edu:636", &tls.Config{InsecureSkipVerify: false})
 if err != nil {
-	log.Fatal("Error al autenticarse:", err)
+	log.Fatal(err)
 }
+defer l.Close()
 ```
 
-## Paso 4: Buscar y verificar usuarios
+## Autenticación y búsqueda de usuarios
 
-Una vez conectados y autenticados, ya podemos buscar usuarios dentro del sistema. Para eso se hace una busqueda con filtros.
+Después de establecer la conexión, el siguiente paso es realizar una autenticación (conocida como "bind") utilizando una cuenta con permisos para consultar el directorio. Posteriormente, se ejecuta una búsqueda para verificar si un usuario existe. Esta operación es esencial para confirmar que el estudiante esté registrado en el sistema.
 
 ```go
+err = l.Bind("cn=admin,dc=miuniversidad,dc=edu", "miclave")
+if err != nil {
+	log.Fatal("No se pudo autenticar:", err)
+}
+
 searchRequest := ldap.NewSearchRequest(
-	"ou=students,dc=example,dc=com",
+	"ou=estudiantes,dc=miuniversidad,dc=edu",
 	ldap.ScopeWholeSubtree,
 	ldap.NeverDerefAliases,
 	0, 0, false,
-	"(uid=jdoe)",
+	"(uid=juanperez)",
 	[]string{"dn", "cn", "mail"},
 	nil,
 )
-```
+result, err := l.Search(searchRequest)
+if err != nil {
+	log.Fatal(err)
+}
 
-Luego revisamos si hubo resultados:
-
-```go
 if len(result.Entries) > 0 {
 	fmt.Println("Usuario encontrado:", result.Entries[0].DN)
 } else {
-	fmt.Println("Usuario no encontrado.")
+	fmt.Println("Usuario no registrado")
 }
 ```
 
-## Paso 5: Verificar la contrasena del estudiante
+## Verificación de credenciales del estudiante
 
-Si ademas de saber si esta registrado, queremos saber si la contrasena es correcta, hay que hacer un nuevo `Bind`:
+Una vez identificado el DN (Distinguished Name) del usuario, se puede proceder a validar su contraseña. Esto se hace mediante un nuevo "bind" con los datos del usuario. Si la autenticación es exitosa, se confirma que tanto el usuario como sus credenciales son válidos.
 
 ```go
-err = l.Bind("uid=jdoe,ou=students,dc=example,dc=com", "contrasena_del_usuario")
+err = l.Bind("uid=juanperez,ou=estudiantes,dc=miuniversidad,dc=edu", "clave_estudiante")
 if err != nil {
-	fmt.Println("Contrasena incorrecta")
+	fmt.Println("Contraseña incorrecta")
 } else {
-	fmt.Println("Autenticacion exitosa")
+	fmt.Println("Usuario autenticado correctamente")
 }
 ```
 
-## Seguridad: Como proteger todo esto?
+## Consideraciones de seguridad
 
-### 1. Usar LDAPS
+Al trabajar con autenticación de usuarios, la seguridad es prioritaria. Es fundamental implementar buenas prácticas como el uso de conexiones cifradas, la validación de certificados y la protección de credenciales. Algunos puntos clave a tener en cuenta:
 
-Siempre que se pueda, usa `ldaps://` para que los datos vayan cifrados.
+1. Utilizar siempre conexiones LDAPS (LDAP sobre SSL/TLS) para proteger la información transmitida.
+2. Validar los certificados TLS del servidor para evitar ataques de intermediario (MITM).
+3. Evitar guardar contraseñas en texto plano dentro del código. Se recomienda utilizar variables de entorno.
+4. Implementar mecanismos de protección contra ataques de fuerza bruta.
+5. En caso de almacenar contraseñas, utilizar algoritmos de hashing como bcrypt.
 
-### 2. Validar certificados
-
-Es fundamental validar los certificados SSL para evitar ataques de tipo MITM.
-
-### 3. Guardar bien las contrasenas
-
-Nunca se deben poner directamente en el codigo. Mejor usar variables de entorno.
-
-### 4. Evitar fuerza bruta
-
-Limitar intentos y loguear actividad sospechosa.
-
-### 5. Hash de contrasenas
-
-Si algun dia se guardan contrasenas, usar bcrypt:
+Ejemplo de uso de bcrypt:
 
 ```go
-hashedPassword, _ := bcrypt.GenerateFromPassword([]byte("miContrasena"), bcrypt.DefaultCost)
+hashedPassword, _ := bcrypt.GenerateFromPassword([]byte("miclave"), bcrypt.DefaultCost)
+err := bcrypt.CompareHashAndPassword(hashedPassword, []byte("miclave"))
 ```
 
-Y para verificar:
+## Conclusión
 
-```go
-err := bcrypt.CompareHashAndPassword(hashedPassword, []byte("miContrasena"))
-```
+Desarrollar una aplicación en Go que interactúe con un servidor LDAP es un proceso completamente viable y bastante estructurado. Con las herramientas adecuadas, es posible establecer una conexión segura, autenticar usuarios y realizar búsquedas eficaces. Esta solución es especialmente útil para entornos como universidades, donde se requiere controlar el acceso a sistemas mediante credenciales centralizadas.
 
-## Conclusion
-
-Conectar una app en Go con un servidor LDAP no es tan dificil, pero si requiere cuidado en la parte de seguridad. Lo mas importante es conectarse de forma segura, autenticar correctamente, buscar con filtros precisos y proteger los datos en todo momento.
+Este tema sirve reforzar conceptos de seguridad, conocer de cerca cómo funciona LDAP y aplicar prácticas reales de desarrollo en Go. Considero que es una habilidad valiosa para cualquier desarrollador que busque integrarse con infraestructuras ya establecidas y que maneje grandes volúmenes de usuarios.
 
 ## Referencias
 
-* [https://github.com/nmcclain/ldap](https://github.com/nmcclain/ldap)
-* [https://tools.ietf.org/html/rfc4511](https://tools.ietf.org/html/rfc4511)
-* [https://pkg.go.dev/golang.org/x/crypto/bcrypt](https://pkg.go.dev/golang.org/x/crypto/bcrypt)
-* [https://en.wikipedia.org/wiki/Lightweight\_Directory\_Access\_Protocol#LDAPS](https://en.wikipedia.org/wiki/Lightweight_Directory_Access_Protocol#LDAPS)
+* [Repositorio de la librería LDAP para Go](https://github.com/nmcclain/ldap)
+* [RFC 4511: Lightweight Directory Access Protocol (LDAP)](https://tools.ietf.org/html/rfc4511)
+* [bcrypt en Go](https://pkg.go.dev/golang.org/x/crypto/bcrypt)
+* [Conceptos básicos de LDAP](https://en.wikipedia.org/wiki/Lightweight_Directory_Access_Protocol)
+
 
