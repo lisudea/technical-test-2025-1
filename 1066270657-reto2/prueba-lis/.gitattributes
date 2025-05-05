@@ -1,3 +1,22 @@
 /gradlew text eol=lf
 *.bat text eol=crlf
 *.jar binary
+src/main/java/com/prueba/lis/ attr(description="Contiene el código fuente principal de la aplicación Java")
+src/main/java/com/prueba/lis/controller/ attr(description="Controladores REST que manejan las peticiones de la API")
+src/main/java/com/prueba/lis/dto/ attr(description="Objetos de Transferencia de Datos (DTOs)")
+src/main/java/com/prueba/lis/entity/ attr(description="Entidades JPA que mapean las tablas de la base de datos")
+src/main/java/com/prueba/lis/mapper/ attr(description="Mappers para la conversión entre entidades y DTOs")
+src/main/java/com/prueba/lis/repository/ attr(description="Repositorios Spring Data JPA para el acceso a datos")
+src/main/java/com/prueba/lis/service/ attr(description="Capa de servicio con la lógica de negocio")
+src/main/java/com/prueba/lis/utils/ attr(description="Clases de utilidad para la aplicación")
+src/main/resources attr(description="Contiene los recursos de la aplicación (configuración, etc.)")
+src/test/java/com/prueba/lis/ attr(description="Contiene las pruebas unitarias e de integración")
+src/main/java/com/prueba/lis/Reto2LisApplication.java attr(description="Punto de entrada principal de la aplicación Spring Boot")
+src/main/java/com/prueba/lis/controller/ActivityController.java attr(description="Controlador REST para la gestión de actividades")
+src/main/java/com/prueba/lis/dto/ActivityDto.java attr(description="DTO para la transferencia de datos de actividad")
+src/main/java/com/prueba/lis/entity/Activity.java attr(description="Entidad JPA que representa una actividad")
+src/main/java/com/prueba/lis/mapper/ActivityMapper.java attr(description="Interfaz MapStruct para la conversión entre Activity y ActivityDto")
+src/main/java/com/prueba/lis/repository/ActivityRepository.java attr(description="Repositorio Spring Data JPA para la entidad Activity")
+src/main/java/com/prueba/lis/service/ActivityService.java attr(description="Capa de servicio con la lógica de negocio para las actividades")
+src/main/java/com/prueba/lis/utils/EntityUpdater.java attr(description="Utilidad para actualizar campos de una entidad dinámicamente")
+src/main/java/com/prueba/lis/utils/ValidationUtils.java attr(description="Utilidades para la validación de datos")
