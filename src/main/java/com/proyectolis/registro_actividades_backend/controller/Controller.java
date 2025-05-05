@@ -49,8 +49,17 @@ public class Controller {
 
     // Marcar actividad como Aprobada/Rechazada
     @PutMapping("/estado/{id}")
-    public ResponseEntity<Actividad> actualizarEstado(@PathVariable Long id, @RequestBody EstadoActividad estado) {
-        Actividad actividadActualizada = actividadService.actualizarEstado(id, estado);
+    public ResponseEntity<Actividad> actualizarEstado(
+            @PathVariable Long id,
+            @RequestParam String estado // Recibe el estado como parámetro de consulta
+    ) {
+        EstadoActividad estadoEnum;
+        try {
+            estadoEnum = EstadoActividad.valueOf(estado.toUpperCase()); // Convertir el string a enum (case-insensitive)
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(null); // Manejar si el estado enviado no es válido
+        }
+        Actividad actividadActualizada = actividadService.actualizarEstado(id, estadoEnum);
         return ResponseEntity.ok(actividadActualizada);
     }
 

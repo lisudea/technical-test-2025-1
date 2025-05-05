@@ -16,6 +16,7 @@ public class ActividadService {
     private Repository actividadRepository;
 
     public Actividad crearActividad(Actividad actividad) {
+        actividad.setEstado(EstadoActividad.EN_ESPERA);
         return actividadRepository.save(actividad);
     }
 
