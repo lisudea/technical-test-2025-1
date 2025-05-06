@@ -1,5 +1,13 @@
-FROM openjdk:17
-EXPOSE 8080
-ADD target/technical-test-2025-1.jar technical-test-2025-1.jar
+# Build stage
+FROM eclipse-temurin:17-jdk-jammy as builder
+WORKDIR /app
+COPY . .
 
-ENTRYPOINT ["java", "-jar", "technical-test-2025-1.jar"]
+RUN ./mvnw clean package -DskipTests
+
+FROM eclipse-temurin:17-jre-jammy
+
+WORKDIR /app
+COPY --from=builder /app/target/reto1-0.0.1-SNAPSHOT.jar .
+EXPOSE 8080
+ENTRYPOINT ["java", "-jar", "reto1-0.0.1-SNAPSHOT.jar"]
