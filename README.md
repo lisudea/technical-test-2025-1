@@ -1,6 +1,15 @@
-# API de Gestión de Actividades - Registro y Control
+# API de Gestión de Actividades - Backend (Prueba Técnica LIS) ![Versión del Proyecto](https://img.shields.io/badge/tag-v1.0.0-green) [![Java](https://img.shields.io/badge/Java-21-orange.svg?logo=openjdk&logoColor=white)](https://www.oracle.com/java/technologies/downloads/) [![Spring Boot](https://img.shields.io/badge/Spring%20Boot-6DB33F.svg?logo=springboot&logoColor=white)](https://spring.io/projects/spring-boot)
 
-## Desarrollador: Jhomar Arrieta - Prueba Tecnica LIS
+## Jhomar Arrieta
+
+### Tecnologías y Herramientas Utilizadas
+- ![Java](https://img.shields.io/badge/Java-21-orange.svg?logo=openjdk&logoColor=white)
+- ![Spring Boot](https://img.shields.io/badge/Spring%20Boot-6DB33F.svg?logo=springboot&logoColor=white)
+- ![JPA](https://img.shields.io/badge/JPA-Java%20Persistence-blueviolet) - ![Maven](https://img.shields.io/badge/Maven-C71A36.svg?logo=apachemaven&logoColor=white)
+- ![MySQL](https://img.shields.io/badge/MySQL-4479A1.svg?logo=mysql&logoColor=white)
+
+> [!IMPORTANT]
+> Este proyecto backend proporciona la API RESTful necesaria para la aplicación frontend. El **frontend (React)** correspondiente se encuentra en la **misma carpeta de repositorio**, pero en una **rama diferente** llamada `1068136291-reto3`. Para probar la funcionalidad completa, este backend debe estar ejecutándose para que el frontend pueda consumir sus servicios.
 
 ---
 
