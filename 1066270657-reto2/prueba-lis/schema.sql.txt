@@ -1,0 +1,9 @@
+CREATE TABLE activities (
+    id SERIAL PRIMARY KEY,
+    assist_name VARCHAR,
+    assist_id INTEGER,
+    date_init TIMESTAMP,
+    date_end TIMESTAMP,
+    description TEXT,
+    estado VARCHAR
+);
