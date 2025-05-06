@@ -154,11 +154,11 @@ WHERE CedulaAuxiliar = '123';
 
 #### 3. Estados de Actividad
 
-| Estado    | Descripción              |
-| --------- | ------------------------ |
-| Pendiente | Esperando aprobación     |
-| Aprobado  | Actividad validada       |
-| Rechazado | No cumple los requisitos |
+| Estado    | 
+| --------- | 
+| Pendiente | 
+| Aprobado  |
+| Rechazado | 
 
 ### 5.2 Seguridad y Validaciones
 
@@ -192,6 +192,22 @@ builder.Services.AddScoped<IServicioActividad, ServicioActividad>();
 * Mejora la escalabilidad del sistema en ambientes concurrentes.
 * Uso de `async`/`await` en operaciones como `SaveChangesAsync()`.
 
+Ejemplo de flujo:
+  sequenceDiagram
+    Auxiliar->>API: POST /actividades
+    API->>DB: INSERT actividad
+    DB-->>API: Confirmación
+    API->>Coordinador: Notificación
+    Coordinador->>API: PATCH /actividades/{id}/aprobar
+    API->>DB: UPDATE estado
+
+diagrama de componentes:
+graph TD
+    A[Frontend] --> B[ActividadController]
+    B --> C[ServicioActividad]
+    C --> D[AppDbContext]
+    D --> E[(SQL Server)]
+    C --> F[ServicioNotificaciones]
 ---
 
 ## 7. Guía de Instalación y Ejecución Local
@@ -228,4 +244,6 @@ docker start reto2-db
 ```
 
 ---
+
+
 
