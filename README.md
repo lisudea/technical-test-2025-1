@@ -191,7 +191,8 @@ builder.Services.AddScoped<IServicioActividad, ServicioActividad>();
 * Uso de `async`/`await` en operaciones como `SaveChangesAsync()`.
 
 flujo
-![Ejemplo](conexion.png)
+
+![Ejemplo](flujo.png)
 
 diagrama de relaciones:
 
