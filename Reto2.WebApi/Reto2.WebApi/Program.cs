@@ -19,6 +19,12 @@ namespace Reto2.WebApi
             builder.Services.AddScoped<IServicioActividad, ServicioActividad>();
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
+            builder.Services.AddCors(options => {
+                options.AddPolicy("AllowAll", // Solo para desarrollo
+                    builder => builder.AllowAnyOrigin()
+                                    .AllowAnyMethod()
+                                    .AllowAnyHeader());
+            });
 
             // comentar esta linea cuando este haciendo debug
 
@@ -27,10 +33,9 @@ namespace Reto2.WebApi
             var app = builder.Build();
             app.UseSwagger();
             app.UseSwaggerUI();
-
-
+            app.UseCors("AllowAll");
             app.UseAuthorization();
-
+            
 
             app.MapControllers();
 
