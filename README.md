@@ -48,8 +48,6 @@ La solución sigue los principios de **Clean Architecture**, organizándose en c
 
 ### 2.2 Diagrama de Componentes
 
-(📌 Aquí puede incluirse una imagen que muestre la arquitectura por carpetas y flujos de datos)
-
 ```
 Reto2/
 ├── Dominio/
@@ -192,23 +190,15 @@ builder.Services.AddScoped<IServicioActividad, ServicioActividad>();
 * Mejora la escalabilidad del sistema en ambientes concurrentes.
 * Uso de `async`/`await` en operaciones como `SaveChangesAsync()`.
 
-Ejemplo de flujo:
-  sequenceDiagram
-    Auxiliar->>API: POST /actividades
-    API->>DB: INSERT actividad
-    DB-->>API: Confirmación
-    API->>Coordinador: Notificación
-    Coordinador->>API: PATCH /actividades/{id}/aprobar
-    API->>DB: UPDATE estado
+flujo
+![Ejemplo](conexion.png)
 
-diagrama de componentes:
-graph TD
-    A[Frontend] --> B[ActividadController]
-    B --> C[ServicioActividad]
-    C --> D[AppDbContext]
-    D --> E[(SQL Server)]
-    C --> F[ServicioNotificaciones]
+diagrama de relaciones:
+
+![Ejemplo](relacionesdb.png)
+
 ---
+
 
 ## 7. Guía de Instalación y Ejecución Local
 
