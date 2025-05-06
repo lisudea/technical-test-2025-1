@@ -21,7 +21,7 @@ public class ActivityMapper {
         activity.setDateInit(dto.getDateInit());
         activity.setDateEnd(dto.getDateEnd());
         activity.setDescription(dto.getDescription());
-        activity.setEstado("en espera");  // O un valor predeterminado, dependiendo del caso
+        activity.setEstado(dto.getEstado());  // O un valor predeterminado, dependiendo del caso
         return activity;
     }
 
@@ -35,7 +35,7 @@ public class ActivityMapper {
         dto.setDateInit(activity.getDateInit());
         dto.setDateEnd(activity.getDateEnd());
         dto.setDescription(activity.getDescription());
-        dto.setEstado("en espera");
+        dto.setEstado(activity.getEstado());
         return dto;
     }
 }

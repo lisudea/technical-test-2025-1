@@ -33,7 +33,7 @@ public class ActivityService {
         fieldValidators.put("dateInit", (value, fieldName) -> ValidationUtils.validateLocalDateTimeFormat(value.toString(), fieldName));
         fieldValidators.put("dateEnd", (value, fieldName) -> ValidationUtils.validateLocalDateTimeFormat(value.toString(), fieldName));
         fieldValidators.put("estado", (value, fieldName) -> ValidationUtils.validateEstado(value.toString()));
-        // Para 'description', no tenemos validaciones específicas por ahora
+
     }
 
     public List<Activity> getAll() {
@@ -43,8 +43,10 @@ public class ActivityService {
     public Optional<Activity> getById(Integer id) {
         return repository.findById(id);
     }
+    public void delete(Activity activity){repository.delete(activity);}
 
     public Activity save(Activity activity) {
+        activity.setEstado("en espera");
         return repository.save(activity);
     }
 

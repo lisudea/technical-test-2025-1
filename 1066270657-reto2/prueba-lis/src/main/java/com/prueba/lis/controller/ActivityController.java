@@ -18,6 +18,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/activities")
+@CrossOrigin(origins = "http://localhost:5173", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT, RequestMethod.DELETE, RequestMethod.PATCH}, allowedHeaders = "*", allowCredentials = "true")
 public class ActivityController {
 
     private final ActivityService service;
@@ -38,6 +39,11 @@ public class ActivityController {
                 .toList();
     }
 
+    @DeleteMapping
+    public void delete(@RequestBody ActivityDto activityDto) {
+        service.delete(mapper.toEntity(activityDto));
+    }
+
     //Metodo para obtener una actividad segun su id
     @GetMapping("/{id}")
     public Optional<ActivityDto> getById(@PathVariable Integer id) {
@@ -45,7 +51,7 @@ public class ActivityController {
         return activity.map(mapper::toDto);  // Convertimos a DTO si existe
     }
 
-    //Metodo para obtener todas las actividades realizadas por un auxilair
+    //Metodo para obtener todas las actividades realizadas por un auxiliar
     @GetMapping("/assistant/{assistantId}")
     public List<ActivityDto> findByAssistId(@PathVariable Integer assistantId) {
         return service.findByAssistId(assistantId)
@@ -61,18 +67,6 @@ public class ActivityController {
             @RequestParam("endDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime endDate) {
         return service.getActivitiesByDateRange(startDate, endDate)
                 .stream()
-                .map(mapper::toDto)
-                .toList();
-    }
-
-    //Metodo para obtener todas las actividades realizadas en un dia ingresando las fechas
-    @PostMapping("/fecha")
-    public List<ActivityDto> getActivitiesByDateRangeFromBody(
-            @RequestBody Map<String, String> dateRange) {
-        LocalDateTime startDate = LocalDateTime.parse(dateRange.get("startDate"));
-        LocalDateTime endDate = LocalDateTime.parse(dateRange.get("endDate"));
-        List<Activity> activities = service.getActivitiesByDateRange(startDate, endDate);
-        return activities.stream()
                 .map(mapper::toDto)
                 .toList();
     }
