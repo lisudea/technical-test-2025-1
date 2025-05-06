@@ -244,8 +244,15 @@ docker start reto2-db
 ```
 
 ---
-tambiien esta el docker de la base de datos 
+más ajustes si llega a falla, solo es abrir el visual studio y descargar estas dependencias.
+![Ejemplo](caracteristicas.png)
+
+tambien esta el docker de la base de datos 
 Correr esta Linea de codigo tal cual: docker run -e "ACCEPT_EULA=Y" -e "SA_PASSWORD=Admin123!" -p 14333:1433 --name sqlserver -d mcr.microsoft.com/mssql/server:2022-latest
+
+abren sql server y les debe salir algo asi
+![Ejemplo](conexion.png)
+
 
 dado el caso que este no llegue a funcionar en el git se encuentra tambien los jquerys para crear las tablas y los datos.
 
@@ -253,6 +260,12 @@ tambien existe una opcion de despliegue con ngrok
 https://ngrok.com/
 se descarga el archivo se abre en la terminal estando en el directorio donde esta el archivo ngrok. se ejecuta ngrok http 5000
  todo esto teniendo en cuenta que los 2 dockers esten corriendo.
+ asi
+![Ejemplo](ejecu.png)
+
+ una ves corran el rpoyecto debe salir algo asi en el swagger.
+ ![Ejemplo](swagger.png)
+ 
 
 
 
