@@ -1,6 +1,6 @@
 # Registro de Actividades - Frontend (Prueba Técnica LIS) ![Versión del Proyecto](https://img.shields.io/badge/tag-v1.0.0-blue) [![React](https://img.shields.io/badge/React-%2361DAFB.svg?logo=react&logoColor=black)](https://react.dev/) [![Vite](https://img.shields.io/badge/Vite-%23646CFF.svg?logo=vite&logoColor=white)](https://vitejs.dev/)
 
-## Desarrollador Frontend - Jhomar Arrieta
+## Jhomar Arrieta
 
 ### Tecnologías y Herramientas Utilizadas
 - ![React](https://img.shields.io/badge/React-%2361DAFB.svg?logo=react&logoColor=black)
